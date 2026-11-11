@@ -1,0 +1,20 @@
+{
+  "name": "bankai-3d-solar-odyssey",
+  "version": "1.0.0",
+  "description": "BANKAI \u2014 Interactive 3D Crystal Singularity & Solar System Odyssey with Itachi Theme (Senya) Audio Engine",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -l 5500",
+    "dev": "npx live-server --port=5500"
+  },
+  "keywords": [
+    "threejs",
+    "webgl",
+    "web-audio-api",
+    "bankai",
+    "solar-system",
+    "senya"
+  ],
+  "author": "BANKAI",
+  "license": "MIT"
+}

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#020306">
+  <meta name="description" content="BANKAI — an interactive 3D crystal singularity and solar system odyssey.">
+  <title>BANKAI — 3D Sonic & Solar System Odyssey</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="font-['Inter']">
+  <div id="webgl-container" aria-label="Interactive 3D solar system"></div>
+
+  <section id="intro-overlay" class="fixed inset-0 z-50 overflow-hidden bg-[#020306]">
+    <canvas id="eclipse-intro-canvas" class="absolute inset-0"></canvas>
+    <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/70"></div>
+    
+    <!-- Top-Left Branding Only -->
+    <header class="relative z-20 flex items-center justify-between px-5 sm:px-8 md:px-12 pt-5 sm:pt-6 pt-[max(1.25rem,env(safe-area-inset-top))] pl-[max(1.25rem,env(safe-area-inset-left))] pointer-events-auto">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <img src="assets/images/strawhat-logo.png" alt="Emblem" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-white object-contain shadow-md shrink-0">
+        <span class="font-['Orbitron'] tracking-[0.24em] sm:tracking-[0.28em] text-white text-sm sm:text-base md:text-lg font-bold">BANKAI</span>
+      </div>
+      <button id="intro-menu-enter" class="hidden" aria-hidden="true"></button>
+    </header>
+
+    <!-- Hero Main Section: Vertical 00-04 Rail on Far Left, Heading & Description to their Right -->
+    <div class="absolute left-4 sm:left-7 md:left-10 lg:left-14 top-[44%] -translate-y-1/2 z-20 flex items-center gap-4.5 sm:gap-6 md:gap-8 max-w-[min(94vw,640px)] select-none pl-[env(safe-area-inset-left)]">
+      
+      <!-- Station Numbers Rail (00–04 Vertically on Far Left) -->
+      <div class="relative flex flex-col items-center shrink-0">
+        <div class="absolute top-2 bottom-2 w-[1px] bg-gradient-to-b from-cyan-400/40 via-white/20 to-white/5 pointer-events-none"></div>
+        <div class="relative flex flex-col gap-2.5 sm:gap-3 md:gap-3.5">
+          <div class="intro-station-badge active" data-station="0"><span>00</span></div>
+          <div class="intro-station-badge" data-station="1"><span>01</span></div>
+          <div class="intro-station-badge" data-station="2"><span>02</span></div>
+          <div class="intro-station-badge" data-station="3"><span>03</span></div>
+          <div class="intro-station-badge" data-station="4"><span>04</span></div>
+        </div>
+      </div>
+
+      <!-- Main Heading, Description & Dual Action Buttons to their Right -->
+      <div class="flex-1 min-w-0">
+        <h1 class="font-['Orbitron'] text-lg sm:text-xl md:text-2xl lg:text-[34px] font-bold tracking-[0.08em] text-white leading-tight uppercase [text-shadow:0_0_20px_rgba(255,255,255,0.4),0_0_40px_rgba(56,189,248,0.2)]">
+          <span class="block text-white">DISCOVER THE</span>
+          <span class="block text-white">SOLAR SYSTEM</span>
+        </h1>
+        <p class="mt-2 sm:mt-2.5 text-[8.5px] sm:text-[9.5px] md:text-[11px] tracking-[0.24em] sm:tracking-[0.28em] text-slate-300 font-['Inter'] uppercase">
+          A 3D SONIC JOURNEY THROUGH SPACE
+        </p>
+        <div class="mt-4 sm:mt-5 md:mt-5.5 flex flex-wrap items-center gap-2.5 sm:gap-3.5">
+          <button id="start-experience-btn" class="odyssey-primary-btn px-4.5 sm:px-5.5 md:px-6 py-2 sm:py-2.5 rounded-full text-[10.5px] sm:text-xs font-semibold tracking-[0.12em] uppercase inline-flex items-center gap-2 transition-all">
+            <span>ENTER THE ODYSSEY</span>
+            <span class="text-xs tracking-normal">&rarr;</span>
+          </button>
+          <button id="intro-ambience-btn" class="odyssey-secondary-btn px-4 sm:px-5 md:px-5.5 py-2 sm:py-2.5 rounded-full text-[10.5px] sm:text-xs font-semibold tracking-[0.12em] uppercase inline-flex items-center gap-1.5 transition-all">
+            <span id="ambience-icon" class="text-[10px]">▶</span>
+            <span id="ambience-text">PLAY AMBIENCE</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Glowing Earth Horizon at Bottom-Left -->
+    <img src="assets/images/earth-horizon.png" alt="Glowing Earth Horizon" class="absolute bottom-0 left-0 pointer-events-none select-none z-10 w-[78vw] max-w-[820px] object-contain object-left-bottom">
+
+    <!-- Rishabh Goradia Sci-Fi Card at Bottom-Right -->
+    <div class="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-10 z-20 pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]">
+      <div class="rishabh-brand-card flex items-center gap-3 sm:gap-4.5 px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 border border-cyan-400/40 bg-[#030712]/85 backdrop-blur-md shadow-[0_0_25px_rgba(6,182,212,0.25)]">
+        <div>
+          <div class="font-['Orbitron'] text-xs sm:text-sm md:text-[14px] font-bold tracking-[0.16em] text-white">RISHABH GORADIA</div>
+          <div class="text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.18em] sm:tracking-[0.22em] text-cyan-200/80 font-medium">Developer // Designer // Builder</div>
+        </div>
+        <div class="h-6 sm:h-7 w-[1px] bg-white/20"></div>
+        <div class="flex items-center gap-2 sm:gap-3 text-white">
+          <a href="https://www.instagram.com/rishabh_goradia" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Instagram">
+            <svg class="social-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/rishabh-goradia-773415350" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="LinkedIn">
+            <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/>
+            </svg>
+          </a>
+          <a href="https://github.com/rishabhgoradia10e-spec" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="GitHub">
+            <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <header class="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-3.5 sm:px-6 md:px-10 py-3 sm:py-4 md:py-5 pt-[max(0.75rem,env(safe-area-inset-top))] pl-[max(0.875rem,env(safe-area-inset-left))] pr-[max(0.875rem,env(safe-area-inset-right))] pointer-events-none">
+    <div id="main-nav-brand" class="pointer-events-auto flex items-center gap-2 sm:gap-2.5 cursor-pointer hover:opacity-90 transition-opacity" role="button" aria-label="Return to Landing Page">
+      <img src="assets/images/strawhat-logo.png" alt="Emblem" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white object-contain shadow-sm shrink-0">
+      <div class="font-['Orbitron'] text-xs sm:text-sm tracking-[0.22em] sm:tracking-[0.3em] text-white font-semibold">BANKAI</div>
+      <span id="solar-odyssey-badge" class="hidden text-[8.5px] sm:text-[9.5px] tracking-[0.22em] text-cyan-300/85 border-l border-white/20 pl-2 sm:pl-2.5 font-['Inter'] font-semibold uppercase">SOLAR ODYSSEY</span>
+    </div>
+    <div class="pointer-events-auto flex items-center gap-1.5 sm:gap-2">
+      <button id="mute-btn" class="glass-btn rounded-full p-2 sm:p-2.5 min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center" aria-label="Toggle sound" title="Mute/Unmute">
+        <svg id="volume-icon-svg" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+      </button>
+      <button id="settings-toggle-btn" class="glass-btn rounded-full px-2.5 sm:px-3 py-2 sm:py-2.5 min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center gap-1.5" style="display: none;" aria-label="Open Audio Lab" title="Open Audio Lab">
+        <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="21" x2="4" y2="14"></line>
+          <line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line>
+          <line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line>
+          <line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        <span class="hidden sm:inline font-['Orbitron'] text-[9px] tracking-wider text-cyan-200 font-semibold pr-0.5">AUDIO LAB</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="fixed left-2.5 sm:left-5 md:left-10 top-1/2 z-20 -translate-y-1/2 flex flex-col items-center gap-2 sm:gap-2.5 md:gap-3 pl-[env(safe-area-inset-left)]" aria-label="Celestial stations">
+    <div class="absolute left-1/2 top-2 bottom-2 -translate-x-1/2 w-[1px] bg-gradient-to-b from-cyan-400/40 via-white/20 to-white/5 pointer-events-none"></div>
+    <button class="station-dot active relative z-10" data-station="0" aria-label="Crystal Singularity">00</button>
+    <button class="station-dot relative z-10" data-station="1" aria-label="Sun">01</button>
+    <button class="station-dot relative z-10" data-station="2" aria-label="Earth">02</button>
+    <button class="station-dot relative z-10" data-station="3" aria-label="Moon">03</button>
+    <button class="station-dot relative z-10" data-station="4" aria-label="Jupiter">04</button>
+  </nav>
+
+  <section id="celestial-hud" class="fixed z-20 left-1/2 bottom-2 sm:bottom-2.5 md:bottom-3.5 -translate-x-1/2 w-[min(94vw,410px)] max-w-full px-1.5 sm:px-0 pb-[env(safe-area-inset-bottom)]">
+    <div class="glass-panel rounded-xl px-3 sm:px-4 md:px-4.5 py-2 sm:py-2.5 md:py-3">
+      <div class="flex items-center justify-between gap-2">
+        <div class="min-w-0 flex-1">
+          <div class="text-[8px] sm:text-[8.5px] tracking-[0.2em] sm:tracking-[0.25em] text-cyan-300 uppercase truncate">ACTIVE STATION <span id="station-index-badge">00</span></div>
+          <h2 id="station-title" class="mt-0.5 font-['Orbitron'] text-xs sm:text-sm md:text-[15px] tracking-[0.06em] sm:tracking-[0.08em] font-semibold truncate">CRYSTAL SINGULARITY</h2>
+          <p id="station-subtitle" class="text-[9px] sm:text-[10px] text-slate-400 truncate sm:overflow-visible">Scroll or Swipe to Warp Solar System • Click Core for Chimes</p>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button id="prev-planet-btn" class="glass-btn rounded-full p-1.5 sm:p-2 min-w-[28px] min-h-[28px] sm:min-w-[32px] sm:min-h-[32px] flex items-center justify-center" aria-label="Previous station">
+            <svg class="w-3.5 h-3.5 stroke-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button id="next-planet-btn" class="glass-btn rounded-full p-1.5 sm:p-2 min-w-[28px] min-h-[28px] sm:min-w-[32px] sm:min-h-[32px] flex items-center justify-center" aria-label="Next station">
+            <svg class="w-3.5 h-3.5 stroke-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="mt-1.5 sm:mt-2 md:mt-2.5 flex items-center justify-between gap-2 border-t border-white/10 pt-1.5 sm:pt-2">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <button id="pulse-chord-btn" class="glass-btn rounded-md px-2 py-0.5 sm:py-1 text-[8px] sm:text-[8.5px] md:text-[9px] tracking-wider font-medium shrink-0">PLAY HARMONIC</button>
+          <canvas id="spectrum-canvas" width="75" height="18" class="w-[60px] sm:w-[75px] h-[16px] sm:h-[18px]" aria-label="Audio spectrum visualizer"></canvas>
+        </div>
+        <span id="freq-readout" class="text-[8.5px] sm:text-[9px] tracking-widest text-slate-400 shrink-0">440 Hz</span>
+      </div>
+    </div>
+  </section>
+
+  <aside id="synth-panel" class="fixed right-0 top-0 z-[70] h-full w-[min(94vw,360px)] sm:w-[360px] md:w-[380px] translate-x-[120%] opacity-0 p-2.5 sm:p-4 md:p-5 transition-all duration-500 pt-[max(0.625rem,env(safe-area-inset-top))] pb-[max(0.625rem,env(safe-area-inset-bottom))] pr-[max(0.625rem,env(safe-area-inset-right))]">
+    <div class="glass-panel h-full rounded-2xl p-4 sm:p-5 md:p-6 overflow-y-auto">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[8px] sm:text-[9px] tracking-[0.3em] text-cyan-300 uppercase">AUDIO LAB</p>
+          <h2 class="mt-0.5 sm:mt-1 font-['Orbitron'] text-sm sm:text-base tracking-widest">SYNTH CONTROL</h2>
+        </div>
+        <button id="close-panel-btn" class="glass-btn rounded-full p-1.5 sm:p-2 min-w-[32px] min-h-[32px] flex items-center justify-center" aria-label="Close controls">
+          <svg class="w-4 h-4 stroke-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="mt-5 sm:mt-7 md:mt-8 space-y-4 sm:space-y-6 md:space-y-7 text-xs">
+        <label class="block">MASTER VOLUME <span id="gain-val" class="float-right font-mono text-cyan-300">75%</span>
+          <input id="gain-slider" type="range" min="0" max="100" value="75" class="mt-3 sm:mt-4 w-full">
+        </label>
+        <label class="block">CRYSTAL MORPH <span id="morph-val" class="float-right font-mono text-cyan-300">65%</span>
+          <input id="morph-slider" type="range" min="0" max="100" value="65" class="mt-3 sm:mt-4 w-full">
+        </label>
+        <label class="block">ORBITAL SPEED <span id="speed-val" class="float-right font-mono text-cyan-300">1.0x</span>
+          <input id="speed-slider" type="range" min="1" max="30" value="10" class="mt-3 sm:mt-4 w-full">
+        </label>
+        <div class="flex items-center justify-between">
+          <span class="tracking-wider">ARPEGGIATOR</span>
+          <button id="arp-toggle" class="rounded-md border border-cyan-400/40 bg-cyan-500/20 px-3 py-1 text-cyan-300 text-[11px] font-medium tracking-wider">ACTIVE</button>
+        </div>
+        <div>
+          <p class="mb-2 sm:mb-3 tracking-widest text-slate-400 text-[11px]">CORE GEOMETRY</p>
+          <div class="grid grid-cols-2 gap-1.5 sm:gap-2">
+            <button class="geo-btn active" data-geo="crystal">CRYSTAL</button>
+            <button class="geo-btn" data-geo="torus">TORUS</button>
+            <button class="geo-btn" data-geo="sphere">SPHERE</button>
+            <button class="geo-btn" data-geo="octa">OCTAHEDRON</button>
+          </div>
+        </div>
+        <div>
+          <p class="mb-2 sm:mb-3 tracking-widest text-slate-400 text-[11px]">COLOR THEMES</p>
+          <div class="grid grid-cols-2 gap-1.5 sm:gap-2">
+            <button class="theme-btn active" data-theme="cyber">CYBER</button>
+            <button class="theme-btn" data-theme="solar">SOLAR</button>
+            <button class="theme-btn" data-theme="emerald">EMERALD</button>
+            <button class="theme-btn" data-theme="nebula">NEBULA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div id="harmonic-toast" class="fixed top-20 sm:top-24 left-1/2 z-30 -translate-x-1/2 -translate-y-2 opacity-0 transition-all duration-300 pointer-events-none max-w-[90vw]">
+    <div class="glass-panel rounded-full px-4 sm:px-5 py-2 sm:py-3 text-[10px] sm:text-xs tracking-widest text-cyan-200 text-center truncate" id="harmonic-toast-text">HARMONIC RESONANCE</div>
+  </div>
+
+  <audio id="senya-bg-audio" src="assets/audio/senya-theme.mp3" preload="auto" loop></audio>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

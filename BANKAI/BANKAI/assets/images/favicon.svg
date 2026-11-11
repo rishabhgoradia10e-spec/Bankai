@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0a1226" />
+      <stop offset="85%" stop-color="#040814" />
+      <stop offset="100%" stop-color="#02040a" />
+    </radialGradient>
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Dark obsidian circle badge with subtle cyan-white rim -->
+  <circle cx="32" cy="32" r="30" fill="url(#bgGlow)" stroke="rgba(186, 230, 253, 0.45)" stroke-width="1.5" />
+  <circle cx="32" cy="32" r="22" fill="url(#starGlow)" />
+  <!-- Crisp white 4-pointed cosmic star (✦) -->
+  <path d="M 32,7 Q 32,32 57,32 Q 32,32 32,57 Q 32,32 7,32 Q 32,32 32,7 Z" fill="#ffffff" />
+</svg>
+

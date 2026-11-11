@@ -1,0 +1,23 @@
+{
+  "project": "BANKAI \u2014 3D Sonic & Solar System Odyssey",
+  "libraries": [
+    {
+      "name": "Three.js",
+      "version": "r128",
+      "cdn": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+      "purpose": "WebGL 3D rendering for Crystal Singularity, Sun, Earth, Moon, Jupiter, and Particle Nebula"
+    },
+    {
+      "name": "Tailwind CSS",
+      "version": "3.4.x",
+      "cdn": "https://cdn.tailwindcss.com",
+      "purpose": "Responsive utility-first styling for HUD overlays and Dark Obsidian 1st page"
+    },
+    {
+      "name": "Lucide Icons",
+      "version": "latest",
+      "cdn": "https://unpkg.com/lucide@latest",
+      "purpose": "Vector UI icons for navigation, synth drawer, and geometry controls"
+    }
+  ]
+}
